@@ -1,3 +1,16 @@
+print("""
+@Author:w01f
+@repo:https://github.com/W01fh4cker/nucleic-acid-information-query
+@version 1.0
+@2022/3/27
+___          ______          ___        ________         ____          _______
+\  \        /  /\  \        /  /      /   ____  \       |   |         /  ____/
+ \  \      /  /  \  \      /  /       |  |   |  |       |   |     __/   /___
+  \  \    /  /    \  \    /  /        |  |   |  |       |   |    /___   ___/
+   \  \  /  /      \  \  /  /         |  |   |  |       |   |       |  |
+    \  \/  /        \  \/  /          |  |___|  |       |   |       |  |
+     \____/          \____/           \ ________/       |___|       |__|
+""")
 import requests
 import xlrd
 import xlwt
@@ -33,44 +46,46 @@ def nucleic_acid_information_query():
         col_data1 = work_sheet.cell_value(i, 0)  # 获取第二列（姓名）的内容
         col_data2 = '%s' % work_sheet.cell_value(i, 3)  # 获取第四列（身份证）的内容
         dict = {"username": col_data1, "userid": str(col_data2)}
-        url = 'https://cydj.weiynet.cn/api/v3/getUserResult?info=' + str(json.dumps(dict,
-                                                                                    ensure_ascii=False)) + '&queryType=1&usercode=undefined&phone=undefined&source=h5&version=v3'
+        url = 'https://cydj.weiynet.cn/api/v3/getUserResult?info=' + str(json.dumps(dict,ensure_ascii=False)) + '&queryType=1&usercode=undefined&phone=undefined&source=h5&version=v3'
         headers = {
             "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/99.0.4844.74 Safari/537.36"
         }
         resp = requests.post(url=url, headers=headers)
         res = json.loads((resp.content).decode('utf-8'))
         global report_time, report_result
-        if (len(res["list"]) == 0):
-            print("该人员还没进行核酸检测！")
-        else:
-            timechuo = res["list"][0]["testtime"]  # 获取时间戳
-            name = res["list"][0]["username"]
-            if timechuo is None:
-                print(name + "核酸检测报告还未出来")
+        if (res["err"]==-3):
+            print("[*]该人员信息有误")
+        elif (res["err"]==0):
+            if (len(res["list"]) == 0):
+                print("[*]"+ name +"该人员还没进行核酸检测！")
             else:
-                if ((res["list"][0]["username"]) != (res["list"][1]["username"])):
-                    print(name + "需手动核查！")
+                timechuo = res["list"][0]["testtime"]  # 获取时间戳
+                name = res["list"][0]["username"]
+                if timechuo is None:
+                    print("[*]"+ name + "核酸检测报告还未出来")
                 else:
-                    report_time = time.strftime('%Y-%m-%d %H:%M:%S', time.localtime(int(timechuo)))
-                    report_result = res["list"][0]["resultdata"]
-                    # 是否是阴性，1代表阳性，2代表阴性
-                    if (report_result == "2"):
-                        print(name + "为阴性，核酸检测时间为：" + str(report_time))
+                    if ((res["list"][0]["username"]) != (res["list"][1]["username"])):
+                        print("[*]"+ name + "需手动核查！")
                     else:
-                        print(name + "为阳性！！！！！！！！！，核酸检测时间为：" + str(report_time))
-                    # 写入数据
-                    output_worksheet.write(i, 0, report_time)
-                    output_worksheet.write(i, 1, report_result)
+                        report_time = time.strftime('%Y-%m-%d %H:%M:%S', time.localtime(int(timechuo)))
+                        report_result = res["list"][0]["resultdata"]
+                        # 是否是阴性，1代表阳性，2代表阴性
+                        if (report_result == "2"):
+                            print("[*]"+ name + "为阴性，核酸检测报告出具时间为：" + str(report_time))
+                        else:
+                            print("[*]"+ name + "为阳性！！！！！！！！！，核酸检测报告出具时间为：" + str(report_time))
+                        # 写入数据
+                        output_worksheet.write(i, 0, report_time)
+                        output_worksheet.write(i, 1, report_result)
     output_workbook.save(make_time + '.xls')
     return again()
 def again():
      while True:
-         again = input("本次已经检测完毕，如果想要继续请输入y，退出请按n。")
+         again = input("[*]本次已经检测完毕，如果想要继续请输入y，退出请按n。")
          if again not in {"y","n"}:
-            print("请输入y或n而不是其他字符，谢谢！")
+            print("[*]请输入y或n而不是其他字符，谢谢！")
          elif again == "n":
-            return "感谢您的使用！"
+            return "[*]感谢您的使用！"
          elif again == "y":
             return nucleic_acid_information_query()
 nucleic_acid_information_query()
