@@ -1,4 +1,4 @@
-# <h1 align="center" >Jiangsu-Province nucleic-acid-information-query<br/>江苏省核酸检测信息查询</h1>
+# <h1 align="center" >Jiangsu-Province nucleic-acid-information-batch-query<br/>江苏省核酸检测信息批量查询</h1>
 <p align="center">
     <a href="https://github.com/W01fh4cker/nucleic-acid-information-query"><img alt="nucleic-acid-information-query" src="https://img.shields.io/github/stars/W01fh4cker/nucleic-acid-information-query.svg"></a>
     <a href="https://github.com/xzajyjs/ThunderSearch/releases"><img alt="nucleic-acid-information-query" src="https://img.shields.io/github/release/W01fh4cker/nucleic-acid-information-query.svg"></a>
