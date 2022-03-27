@@ -60,12 +60,19 @@ def nucleic_acid_information_query():
                 print("[*]"+ name +"该人员还没进行核酸检测！")
             else:
                 timechuo = res["list"][0]["testtime"]  # 获取时间戳
-                name = res["list"][0]["username"]
+                name = col_data1
                 if timechuo is None:
                     print("[*]"+ name + "核酸检测报告还未出来")
                 else:
-                    if ((res["list"][0]["username"]) != (res["list"][1]["username"])):
-                        print("[*]"+ name + "需手动核查！")
+                    if(len(res["list"])!=1):
+                        j = 0
+                        for j in range(len(res["list"])):
+                            if(j == len(res["list"])-1):
+                                break
+                            if(res["list"][j]["username"]==res["list"][j+1]["username"]):
+                                continue
+                            else:
+                                print("[*]" + name + "需手动核查！")
                     else:
                         report_time = time.strftime('%Y-%m-%d %H:%M:%S', time.localtime(int(timechuo)))
                         report_result = res["list"][0]["resultdata"]
@@ -77,6 +84,7 @@ def nucleic_acid_information_query():
                         # 写入数据
                         output_worksheet.write(i, 0, report_time)
                         output_worksheet.write(i, 1, report_result)
+                        time.sleep(0.5)
     output_workbook.save(make_time + '.xls')
     return again()
 def again():
