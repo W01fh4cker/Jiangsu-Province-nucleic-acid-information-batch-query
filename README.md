@@ -1,4 +1,4 @@
-# <h1 align="center" >nucleic-acid-information-query</h1>
+# <h1 align="center" >Jiangsu-Province nucleic-acid-information-query<br/>江苏省核酸检测信息查询</h1>
 <p align="center">
     <a href="https://github.com/W01fh4cker/nucleic-acid-information-query"><img alt="nucleic-acid-information-query" src="https://img.shields.io/github/stars/W01fh4cker/nucleic-acid-information-query.svg"></a>
     <a href="https://github.com/xzajyjs/ThunderSearch/releases"><img alt="nucleic-acid-information-query" src="https://img.shields.io/github/release/W01fh4cker/nucleic-acid-information-query.svg"></a>
@@ -9,9 +9,13 @@
 </p>  
 
 ## Introduction  
-调用江苏省核酸检测信息查询的api开发的一款江苏省核酸检测信息导入、查询、导出工具，适用于社区防疫人员核对工作，可以快速地把当地人员的身份信息导入，程序会自动查询核酸检测结果，返回结果并在当前文件夹生成结果导出的表格。  
-有问题直接提issues，或者发信息至sharecat2022@gmail.com  
+**调用江苏省核酸检测信息查询的`api`开发的一款江苏省核酸检测信息导入、查询、导出工具，适用于社区防疫人员核对工作，可以快速地把当地人员的身份信息导入，程序会自动查询核酸检测结果，返回结果并在当前文件夹生成结果导出的表格。  
+有问题直接提issues，或者发信息至`sharecat2022@gmail.com`**  
+## Attention  
+### 1. 导入的表格姓名、身份证应分别放在第`1`、`3`列，如果不是，请修改源代码；  
+### 2. 导入的表格名改为英文，且必须是`.xls`结尾，如果是`.xlsx`结尾，请打开后另存为`.xls`的；  
+### 3. 导出的表格的空行代表需要手动查询。因为该用户有多个家庭成员，v1.1版本暂不支持查询家庭成员的核酸检测结果；  
 ## Version  
-#### v1.1 优化表格排版，优化匹配算法。  
+### v1.1 优化表格排版，优化匹配算法。  
 
-#### v1.0 实现表格导入匹配，并发送请求后接收内容，匹配后填入并导出表格。
+### v1.0 实现表格导入匹配，并发送请求后接收内容，匹配后填入并导出表格。
