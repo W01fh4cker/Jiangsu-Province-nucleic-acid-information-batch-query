@@ -1,8 +1,8 @@
 print("""
 @Author:w01f
 @repo:https://github.com/W01fh4cker/nucleic-acid-information-query
-@version 1.0
-@2022/3/27
+@version 1.3
+@2022/3/29
 ___          ______          ___        ________         ____          _______
 \  \        /  __  \        /  /      /   ____  \       |   |         /  ____/
  \  \      /  /  \  \      /  /       |  |   |  |       |   |     __/   /___
@@ -18,38 +18,43 @@ import json
 import time
 
 def status1():
-    print("[*]" + name + "该人员信息有误")
+    print("[*]【 " + str(i) + " 】" + name + "该人员信息有误")
     status1 = "该人员信息有误"
-    output_worksheet.write(i, 3, status1)
+    output_worksheet.write(i, 5, status1)
 
 def status2():
-    print("[*]" + name + "该人员还没进行核酸检测！")
+    print("[*]【 " + str(i) + " 】" + name + "该人员还没进行核酸检测！")
     status2 = "该人员还没进行核酸检测！"
-    output_worksheet.write(i, 3, status2)
+    output_worksheet.write(i, 5, status2)
 
 def status3():
-    print("[*]" + name + "核酸检测报告还未出来")
+    print("[*]【 " + str(i) + " 】" + name + "核酸检测报告还未出来")
     status3 = "核酸检测报告还未出来"
-    output_worksheet.write(i, 3, status3)
+    output_worksheet.write(i, 5, status3)
 
-def find_time(timechuo,output_worksheet,i):
-    if timechuo is None:
+def find_collecttime(timechuo2,output_worksheet,i):
+    global report_time2
+    report_time2 = time.strftime('%Y-%m-%d %H:%M:%S', time.localtime(int(timechuo2)))
+    output_worksheet.write(i, 3, report_time2)
+
+def find_testtime(timechuo1,output_worksheet,i):
+    if timechuo1 is None:
         status3()
     else:
         global report_time_in
-        report_time_in = time.strftime('%Y-%m-%d %H:%M:%S', time.localtime(int(timechuo)))
-    output_worksheet.write(i, 1, report_time_in)
+        report_time_in = time.strftime('%Y-%m-%d %H:%M:%S', time.localtime(int(timechuo1)))
+    output_worksheet.write(i, 2, report_time_in)
 
 def find_result(list1,name,report_time_in):
     report_result = list1[0]["resultdata"]
     global status5
     status5 = "无"
     if (report_result == "2"):
-        print("[*]" + name + "为阴性，核酸检测报告出具时间为：" + str(report_time_in))
+        print("[*]【 " + str(i) + " 】" + name + "为阴性，核酸检测报告出具时间为：" + str(report_time_in) + "，核酸检测时间为：" + str(report_time2))
     else:
-        print("[*]" + name + "为阳性！！！！！！！！！，核酸检测报告出具时间为：" + str(report_time_in))
-    output_worksheet.write(i, 2, report_result)
-    output_worksheet.write(i, 3, status5)
+        print("[*]【 " + str(i) + " 】" + name + "为阳性！！！！！！！！！，核酸检测报告出具时间为：" + str(report_time_in) + "，核酸检测时间为：" + str(report_time2))
+    output_worksheet.write(i, 4, report_result)
+    output_worksheet.write(i, 5, status5)
 
 def is_multi_relation(res,name):
     for j in range(len(res["list"])-1,-1,-1):
@@ -74,7 +79,8 @@ def import_form_and_query():
     for i in range(1,nrows):
         global name
         name = work_sheet.cell_value(i, 0)  # 获取第二列（姓名）的内容
-        output_worksheet.write(i, 0, name)
+        output_worksheet.write(i, 0, i)
+        output_worksheet.write(i, 1, name)
         sfz = '%s' % work_sheet.cell_value(i, 3)  # 获取第四列（身份证）的内容
         dict = {"username": name, "userid": str(sfz)} # 字典保存数据
         # 构造url
@@ -92,24 +98,28 @@ def import_form_and_query():
         if (res["err"] == -3):
             status1()
         elif (len(res["list"]) == -2):
-            print("[*]请手动核查！！！！！！！！！")
+            print("[*]【 " + str(i) + " 】" + name + "出现未知错误，请手动核查！！！！！！！！！")
         else:
             # 没做核酸
             if(len(res["list"]) == 0):
                 status2()
             elif(len(res["list"]) == 1):
                 timestamp1 = res["list"][0]["testtime"]
-                find_time(timestamp1,output_worksheet,i)
+                timestamp2 = res["list"][0]["collecttime"]
+                find_testtime(timestamp1,output_worksheet,i)
+                find_collecttime(timestamp2,output_worksheet,i)
                 global res_1
                 res_1 = res["list"]
                 find_result(res_1,name,report_time_in)
             else:
                 new_list = is_multi_relation(res,name)
                 timestamp1 = new_list[0]["testtime"]
+                timestamp2 = new_list[0]["collecttime"]
+                find_collecttime(timestamp2, output_worksheet, i)
                 if timestamp1 is None:
                     status3()
                 else:
-                    find_time(timestamp1,output_worksheet,i)
+                    find_testtime(timestamp1,output_worksheet,i)
                     find_result(new_list,name,report_time_in)
 
 def make_form():
@@ -123,14 +133,17 @@ def make_form():
     style = xlwt.XFStyle()  # 创建样式对象
     style.pattern = pattern  # 将模式加入到样式对象
     # 设置单元格的宽度
-    output_worksheet.col(1).width = 600 * 20
-    output_worksheet.col(2).width = 400 * 20
+    output_worksheet.col(2).width = 600 * 20
     output_worksheet.col(3).width = 600 * 20
+    output_worksheet.col(4).width = 400 * 20
+    output_worksheet.col(5).width = 600 * 20
     # 写第一行的标题
-    output_worksheet.write(0, 0, '姓名', style)
-    output_worksheet.write(0, 1, '最近一次核酸报告时间', style)
-    output_worksheet.write(0, 2, '最近一次核酸检测结果(1表示阳性，2表示阴性)', style)
-    output_worksheet.write(0, 3, '备注', style)
+    output_worksheet.write(0, 0, '序号', style)
+    output_worksheet.write(0, 1, '姓名', style)
+    output_worksheet.write(0, 2, '最近一次核酸报告出具时间', style)
+    output_worksheet.write(0, 3, '最近一次做核酸检测时间', style)
+    output_worksheet.write(0, 4, '最近一次核酸检测结果(1表示阳性，2表示阴性)', style)
+    output_worksheet.write(0, 5, '备注', style)
 
 def main():
     make_form()
@@ -139,6 +152,7 @@ def main():
     make_time = time.strftime("%Y%m%d%H%M%S", time.localtime())
     output_workbook.save(make_time + '.xls')
     return again()
+
 def again():
     while True:
         again = input("[*]本次已经检测完毕，如果想要继续请输入y，退出请按n。")
