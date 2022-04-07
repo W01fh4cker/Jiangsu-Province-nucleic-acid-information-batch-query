@@ -84,7 +84,7 @@ def import_form_and_query():
         sfz = '%s' % work_sheet.cell_value(i, 3)  # 获取第四列（身份证）的内容
         dict = {"username": name, "userid": str(sfz)} # 字典保存数据
         # 构造url
-        url = 'https://cydj.weiynet.cn/api/v3/getUserResult?info=' + str(json.dumps(dict,ensure_ascii=False)) + '&queryType=1&usercode=undefined&phone=undefined&source=h5&version=v3'
+        url = '接口url'
         # 构造headers
         headers = {
             "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/99.0.4844.74 Safari/537.36"
