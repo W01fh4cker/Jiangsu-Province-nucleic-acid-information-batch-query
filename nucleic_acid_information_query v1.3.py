@@ -1,8 +1,8 @@
 print("""
-@Author:w01f
-@repo:https://github.com/W01fh4cker/Jiangsu-Province-nucleic-acid-information-batch-query/
-@version 1.3
-@2022/3/29
+@Author: W01f
+@repo: https://github.com/W01fh4cker/Jiangsu-Province-nucleic-acid-information-batch-query/
+@version： 1.3
+@time: 2022/3/29
 ___          ______          ___        ________         ____          _______
 \  \        /  __  \        /  /      /   ____  \       |   |         /  ____/
  \  \      /  /  \  \      /  /       |  |   |  |       |   |     __/   /___
